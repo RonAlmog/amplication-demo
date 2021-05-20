@@ -14,6 +14,7 @@ import { DeleteCatArgs } from "./DeleteCatArgs";
 import { CatFindManyArgs } from "./CatFindManyArgs";
 import { CatFindUniqueArgs } from "./CatFindUniqueArgs";
 import { Cat } from "./Cat";
+import { Customer } from "../../customer/base/Customer";
 import { CatService } from "../cat.service";
 
 @graphql.Resolver(() => Cat)
@@ -120,7 +121,15 @@ export class CatResolverBase {
     // @ts-ignore
     return await this.service.create({
       ...args,
-      data: args.data,
+      data: {
+        ...args.data,
+
+        customer: args.data.customer
+          ? {
+              connect: args.data.customer,
+            }
+          : undefined,
+      },
     });
   }
 
@@ -159,7 +168,15 @@ export class CatResolverBase {
       // @ts-ignore
       return await this.service.update({
         ...args,
-        data: args.data,
+        data: {
+          ...args.data,
+
+          customer: args.data.customer
+            ? {
+                connect: args.data.customer,
+              }
+            : undefined,
+        },
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -189,5 +206,29 @@ export class CatResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => Customer, { nullable: true })
+  @nestAccessControl.UseRoles({
+    resource: "Cat",
+    action: "read",
+    possession: "any",
+  })
+  async customer(
+    @graphql.Parent() parent: Cat,
+    @gqlUserRoles.UserRoles() userRoles: string[]
+  ): Promise<Customer | null> {
+    const permission = this.rolesBuilder.permission({
+      role: userRoles,
+      action: "read",
+      possession: "any",
+      resource: "Customer",
+    });
+    const result = await this.service.getCustomer(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return permission.filter(result);
   }
 }

@@ -55,12 +55,28 @@ export class CatControllerBase {
       );
     }
     return await this.service.create({
-      data: data,
+      data: {
+        ...data,
+
+        customer: data.customer
+          ? {
+              connect: data.customer,
+            }
+          : undefined,
+      },
       select: {
         age: true,
         createdAt: true,
+
+        customer: {
+          select: {
+            id: true,
+          },
+        },
+
         id: true,
         lastName: true,
+        mothersName: true,
         name: true,
         picture: true,
         tailSize: true,
@@ -102,8 +118,16 @@ export class CatControllerBase {
       select: {
         age: true,
         createdAt: true,
+
+        customer: {
+          select: {
+            id: true,
+          },
+        },
+
         id: true,
         lastName: true,
+        mothersName: true,
         name: true,
         picture: true,
         tailSize: true,
@@ -140,8 +164,16 @@ export class CatControllerBase {
       select: {
         age: true,
         createdAt: true,
+
+        customer: {
+          select: {
+            id: true,
+          },
+        },
+
         id: true,
         lastName: true,
+        mothersName: true,
         name: true,
         picture: true,
         tailSize: true,
@@ -195,12 +227,28 @@ export class CatControllerBase {
     try {
       return await this.service.update({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          customer: data.customer
+            ? {
+                connect: data.customer,
+              }
+            : undefined,
+        },
         select: {
           age: true,
           createdAt: true,
+
+          customer: {
+            select: {
+              id: true,
+            },
+          },
+
           id: true,
           lastName: true,
+          mothersName: true,
           name: true,
           picture: true,
           tailSize: true,
@@ -238,8 +286,16 @@ export class CatControllerBase {
         select: {
           age: true,
           createdAt: true,
+
+          customer: {
+            select: {
+              id: true,
+            },
+          },
+
           id: true,
           lastName: true,
+          mothersName: true,
           name: true,
           picture: true,
           tailSize: true,

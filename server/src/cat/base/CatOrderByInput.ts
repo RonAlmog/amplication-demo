@@ -32,6 +32,15 @@ class CatOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
+  customerId?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["Asc", "Desc"],
+  })
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
   id?: SortOrder;
 
   @ApiProperty({
@@ -42,6 +51,15 @@ class CatOrderByInput {
     nullable: true,
   })
   lastName?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["Asc", "Desc"],
+  })
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
+  mothersName?: SortOrder;
 
   @ApiProperty({
     required: false,
