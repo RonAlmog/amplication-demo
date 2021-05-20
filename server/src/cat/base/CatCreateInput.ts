@@ -1,6 +1,14 @@
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional, IsString, IsEnum } from "class-validator";
+import {
+  IsInt,
+  IsOptional,
+  ValidateNested,
+  IsString,
+  IsEnum,
+} from "class-validator";
+import { CustomerWhereUniqueInput } from "../../customer/base/CustomerWhereUniqueInput";
+import { Type } from "class-transformer";
 import { EnumCatType } from "./EnumCatType";
 @InputType()
 class CatCreateInput {
@@ -17,6 +25,18 @@ class CatCreateInput {
 
   @ApiProperty({
     required: false,
+    type: CustomerWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => CustomerWhereUniqueInput)
+  @IsOptional()
+  @Field(() => CustomerWhereUniqueInput, {
+    nullable: true,
+  })
+  customer?: CustomerWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
     type: String,
   })
   @IsString()
@@ -25,6 +45,17 @@ class CatCreateInput {
     nullable: true,
   })
   lastName?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  mothersName?: string | null;
 
   @ApiProperty({
     required: true,

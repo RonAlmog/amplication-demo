@@ -14,6 +14,8 @@ import { DeleteCustomerArgs } from "./DeleteCustomerArgs";
 import { CustomerFindManyArgs } from "./CustomerFindManyArgs";
 import { CustomerFindUniqueArgs } from "./CustomerFindUniqueArgs";
 import { Customer } from "./Customer";
+import { CatFindManyArgs } from "../../cat/base/CatFindManyArgs";
+import { Cat } from "../../cat/base/Cat";
 import { OrderFindManyArgs } from "../../order/base/OrderFindManyArgs";
 import { Order } from "../../order/base/Order";
 import { Address } from "../../address/base/Address";
@@ -210,6 +212,32 @@ export class CustomerResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => [Cat])
+  @nestAccessControl.UseRoles({
+    resource: "Customer",
+    action: "read",
+    possession: "any",
+  })
+  async cats(
+    @graphql.Parent() parent: Customer,
+    @graphql.Args() args: CatFindManyArgs,
+    @gqlUserRoles.UserRoles() userRoles: string[]
+  ): Promise<Cat[]> {
+    const permission = this.rolesBuilder.permission({
+      role: userRoles,
+      action: "read",
+      possession: "any",
+      resource: "Cat",
+    });
+    const results = await this.service.findCats(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results.map((result) => permission.filter(result));
   }
 
   @graphql.ResolveField(() => [Order])

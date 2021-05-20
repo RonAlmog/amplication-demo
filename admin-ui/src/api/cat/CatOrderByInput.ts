@@ -3,8 +3,10 @@ import { SortOrder } from "../../util/SortOrder";
 export type CatOrderByInput = {
   age?: SortOrder;
   createdAt?: SortOrder;
+  customerId?: SortOrder;
   id?: SortOrder;
   lastName?: SortOrder;
+  mothersName?: SortOrder;
   name?: SortOrder;
   picture?: SortOrder;
   tailSize?: SortOrder;

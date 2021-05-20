@@ -1,7 +1,15 @@
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional, IsDate, IsString, IsEnum } from "class-validator";
+import {
+  IsInt,
+  IsOptional,
+  IsDate,
+  ValidateNested,
+  IsString,
+  IsEnum,
+} from "class-validator";
 import { Type } from "class-transformer";
+import { CustomerWhereUniqueInput } from "../../customer/base/CustomerWhereUniqueInput";
 import { EnumCatType } from "./EnumCatType";
 @ObjectType()
 class Cat {
@@ -25,6 +33,15 @@ class Cat {
   createdAt!: Date;
 
   @ApiProperty({
+    required: false,
+    type: CustomerWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => CustomerWhereUniqueInput)
+  @IsOptional()
+  customer?: CustomerWhereUniqueInput | null;
+
+  @ApiProperty({
     required: true,
     type: String,
   })
@@ -42,6 +59,17 @@ class Cat {
     nullable: true,
   })
   lastName!: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  mothersName!: string | null;
 
   @ApiProperty({
     required: true,

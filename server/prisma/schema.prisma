@@ -34,6 +34,7 @@ model Order {
 model Customer {
   address   Address? @relation(fields: [addressId], references: [id])
   addressId String?
+  Cats      Cat[]
   createdAt DateTime @default(now())
   email     String?
   firstName String?
@@ -67,15 +68,18 @@ model Product {
 }
 
 model Cat {
-  age       Int?
-  createdAt DateTime     @default(now())
-  id        String       @id @default(cuid())
-  lastName  String?
-  name      String
-  picture   String?
-  tailSize  String?
-  type      EnumCatType?
-  updatedAt DateTime     @updatedAt
+  age         Int?
+  createdAt   DateTime     @default(now())
+  customer    Customer?    @relation(fields: [customerId], references: [id])
+  customerId  String?
+  id          String       @id @default(cuid())
+  lastName    String?
+  mothersName String?
+  name        String
+  picture     String?
+  tailSize    String?
+  type        EnumCatType?
+  updatedAt   DateTime     @updatedAt
 }
 
 enum EnumCatType {

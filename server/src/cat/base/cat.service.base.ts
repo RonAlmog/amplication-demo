@@ -1,5 +1,5 @@
 import { PrismaService } from "nestjs-prisma";
-import { Prisma, Cat } from "@prisma/client";
+import { Prisma, Cat, Customer } from "@prisma/client";
 
 export class CatServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -34,5 +34,13 @@ export class CatServiceBase {
     args: Prisma.SelectSubset<T, Prisma.CatDeleteArgs>
   ): Promise<Cat> {
     return this.prisma.cat.delete(args);
+  }
+
+  async getCustomer(parentId: string): Promise<Customer | null> {
+    return this.prisma.cat
+      .findUnique({
+        where: { id: parentId },
+      })
+      .customer();
   }
 }
